@@ -1,0 +1,11 @@
+tensorflow
+pyyaml
+numpy
+sklearn
+bottle
+keras
+h5py
+pandas
+validictory
+newrelic
+meinheld

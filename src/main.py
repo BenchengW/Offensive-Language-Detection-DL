@@ -1,4 +1,7 @@
-from Preprocessing_helper import..
+from Preprocessing_helper import *
+from Data_Model_helper import *
+from Data_Augmentation_n_Sentiment_helper import *
+
 
 class Albert(object):
     def __init__(self, data, batch_size, num_epochs):
@@ -99,7 +102,7 @@ class Albert_pretrain(object):
 
     def load_albert(self):
       # Recreate the exact same model, including its weights and the optimizer
-      self.Albertmodel = tf.keras.models.load_model('/content/albert_model.h5')
+      self.Albertmodel = tf.keras.models.load_model('../model/albert_model.h5')
 
       print("#"*100)
       print("------------------------      Albert Pretrain Model Loaded Successfully     -----------------------")
@@ -156,4 +159,14 @@ class Albert_pretrain(object):
 
       else:
         print("Error!\nInput format is not support. Please try other format")
+
+
+if __name__ == "__main__":
+    Pretrain = Albert_pretrain()
+    Pretrain.load_albert()
+    Pretrain.predict("I like it very very much")
+    
+    Albert = Albert(load_data())
+    Albert.fit_albert()
+    Albert.predict("I really hit this one fuck die die die")
 

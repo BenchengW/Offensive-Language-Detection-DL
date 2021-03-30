@@ -296,25 +296,28 @@ def model_batch_predict(model, model_inputs_and_masks_test, batch_size=100):
 
 #Create Batch Prediction for out of GPU memory solution
 def model_predict(model, model_inputs_and_masks_test, batch_size=100):
-    
     probs = model(model_inputs_and_masks_test, training=False)
 
     return np.array(probs)
 
 
 #Create Batch Prediction for out of GPU memory solution
-def model_batch_predict(model, model_inputs_and_masks_test):
-    
-
-      test = {'inputs':model_inputs_and_masks_test['inputs'][i*batch_size:(i+1)*batch_size], 
-                'masks': model_inputs_and_masks_test['masks'][i*batch_size:(i+1)*batch_size]}
-        probs= np.concatenate((probs, np.array(model(test, training=False))))
-      last_batch_test =  {'inputs':model_inputs_and_masks_test['inputs'][(i+1)*batch_size:],
-                          'masks': model_inputs_and_masks_test['masks'][(i+1)*batch_size:]}
-      probs= np.concatenate((probs, np.array(model(last_batch_test, training=False))))
+def model_batch_predict(model, model_inputs_and_masks_test, batch_size=100):
+    probs = np.empty((0, 3))
+    iteration = int(model_inputs_and_masks_test['inputs'].shape[0] / batch_size)
+    # last_batch = model_inputs_and_masks_test.shape[1] % batch_size
+    i = 0
+    if type(model_inputs_and_masks_test) is dict:
+        for i in range(iteration):
+            test = {'inputs': model_inputs_and_masks_test['inputs'][i * batch_size:(i + 1) * batch_size],
+                    'masks': model_inputs_and_masks_test['masks'][i * batch_size:(i + 1) * batch_size]}
+            probs = np.concatenate((probs, np.array(model(test, training=False))))
+        last_batch_test = {'inputs': model_inputs_and_masks_test['inputs'][(i + 1) * batch_size:],
+                           'masks': model_inputs_and_masks_test['masks'][(i + 1) * batch_size:]}
+        probs = np.concatenate((probs, np.array(model(last_batch_test, training=False))))
 
     else:
-      probs = model(model_inputs_and_masks_test, training=False)
+        probs = model(model_inputs_and_masks_test, training=False)
 
     return np.array(probs)
 

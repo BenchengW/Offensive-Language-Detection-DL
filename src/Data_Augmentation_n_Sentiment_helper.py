@@ -16,7 +16,7 @@ import nlpaug.augmenter.char as nac
 import nlpaug.augmenter.word as naw
 import nlpaug.augmenter.sentence as nas
 import nlpaug.flow as naf
-import TextBlob
+from textblob import TextBlob
 
 from nlpaug.util import Action
 aug_insert_bert = naw.ContextualWordEmbsAug(

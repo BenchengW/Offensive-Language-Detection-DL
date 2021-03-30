@@ -1,7 +1,6 @@
 ################################################################################
 # data Augmentation
 ################################################################################
-
 import random
 import re
 import pandas as pd
@@ -51,8 +50,6 @@ class ShuffleSentencesTransform(NLPTransform):
         return ' '.join(sentences), lang
 
 transform = ShuffleSentencesTransform(p=2.0)
-
-!pip install nlpaug
 
 import nlpaug.augmenter.char as nac
 import nlpaug.augmenter.word as naw

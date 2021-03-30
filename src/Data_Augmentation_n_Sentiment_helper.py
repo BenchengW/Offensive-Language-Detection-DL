@@ -12,8 +12,6 @@ nltk.download('punkt')
 
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
-transform = ShuffleSentencesTransform(p=2.0)
-
 import nlpaug.augmenter.char as nac
 import nlpaug.augmenter.word as naw
 import nlpaug.augmenter.sentence as nas

@@ -16,7 +16,7 @@ Pretrain.predict("I happliy like it")
 #Pretrain.predict(text_dataframe) or List of text
 
 Pretrain.check_sentiment("I reallly hate this one")
-x1.doc_augmentation("I reallly hate this one")
+Pretrain.doc_augmentation("I reallly hate this one")
 #Pretrain.corpus_augmentation(text_dataframe)
 #Pretrain
 

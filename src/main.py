@@ -39,7 +39,7 @@ class Albert(object):
                                         })
       Albertmodel = compile_model(Albertmodel)
 
-      %time self.Albertmodel, history_Albert = train_model(Albertmodel, X_train_albert, y_train, X_val_albert, y_val, batch_size=self.batch_size, num_epochs=self.num_epochs, class_weight=class_weight_train)
+      self.Albertmodel, history_Albert = train_model(Albertmodel, X_train_albert, y_train, X_val_albert, y_val, batch_size=self.batch_size, num_epochs=self.num_epochs, class_weight=class_weight_train)
 
       probs = self.Albertmodel.predict(X_test_albert)
       print("#"*100)
@@ -57,7 +57,7 @@ class Albert(object):
         tweet_vectors = kt.texts_to_sequences(New_tweet) #Converting text to a vector of word indexes
         tweet_padded = pad_sequences(tweet_vectors, maxlen=100, padding='post')
         self.prediction_prods = self.Albertmodel.predict(tweet_padded)
-        .prediction = self.prediction_prods.argmax(1)
+        self.prediction = self.prediction_prods.argmax(1)
         if self.prediction[0] ==1:
           print("This is classified as Offensive")
         elif self.prediction[0] ==0:

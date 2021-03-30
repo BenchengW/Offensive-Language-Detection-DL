@@ -12,6 +12,28 @@ nltk.download('punkt')
 
 SENT_DETECTOR = nltk.data.load('tokenizers/punkt/english.pickle')
 
+transform = ShuffleSentencesTransform(p=2.0)
+
+import nlpaug.augmenter.char as nac
+import nlpaug.augmenter.word as naw
+import nlpaug.augmenter.sentence as nas
+import nlpaug.flow as naf
+
+from nlpaug.util import Action
+aug_insert_bert = naw.ContextualWordEmbsAug(
+      model_path='bert-base-uncased', action="insert")
+
+aug_substitute_bert =  naw.ContextualWordEmbsAug(
+    model_path='roberta-base', action="substitute")
+
+aug_substitute_bert.aug_p=0.3
+
+aug_wordnet = naw.SynonymAug(aug_src='wordnet')
+
+aug_swap = naw.RandomWordAug(action="swap")
+
+aug_delete = naw.RandomWordAug()
+
 class NLPTransform(BasicTransform):
     """ Transform for nlp task."""
     LANGS = {
@@ -49,28 +71,6 @@ class ShuffleSentencesTransform(NLPTransform):
         random.shuffle(sentences)
         return ' '.join(sentences), lang
 
-transform = ShuffleSentencesTransform(p=2.0)
-
-import nlpaug.augmenter.char as nac
-import nlpaug.augmenter.word as naw
-import nlpaug.augmenter.sentence as nas
-import nlpaug.flow as naf
-
-from nlpaug.util import Action
-aug_insert_bert = naw.ContextualWordEmbsAug(
-      model_path='bert-base-uncased', action="insert")
-
-aug_substitute_bert =  naw.ContextualWordEmbsAug(
-    model_path='roberta-base', action="substitute")
-
-aug_substitute_bert.aug_p=0.3
-
-aug_wordnet = naw.SynonymAug(aug_src='wordnet')
-
-aug_swap = naw.RandomWordAug(action="swap")
-
-aug_delete = naw.RandomWordAug()
-
 
 def data_augment_bert_sw(aug_insert, aug_substitute, aug_swap, text):
   
@@ -79,7 +79,7 @@ def data_augment_bert_sw(aug_insert, aug_substitute, aug_swap, text):
   augmented_text = aug_swap.augment(augmented_text)
 
   # print("Original:")
-  print(text)
+  # print(text)
   # print("Augmented Text:")
   # print(augmented_text)
   
@@ -107,38 +107,52 @@ def Sentence_order_switch(text):
 
   return Redorder_txts
 
-def data_augment_Hate(df, class_number, number_of_aug):
+def docs_augment(df, class_number, number_of_aug):
 
-    minority_df = df[df['class']==class_number].copy()
-    minority_df = minority_df.reset_index(drop=True)
-    
-    minority_df_len = len(minority_df)
-
+    print("Tips:Please make sure you have a column called 'clean_tweet'")
     final_df = pd.DataFrame()
+    try:
+      minority_df = df[df['class']==class_number].copy()
+      minority_df = minority_df.reset_index(drop=True)
+      
+      minority_df_len = len(minority_df)
 
-    while number_of_aug >0:
+      while number_of_aug >0:
 
-      if number_of_aug-minority_df_len>=0:
+        if number_of_aug-minority_df_len>=0:
 
-        new_df = minority_df.copy()
-        new_df['tweet_agument'] = new_df.apply(lambda row : data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, row['clean_tweet']), axis =1)
-        final_df = pd.concat([final_df, new_df])
+          new_df = minority_df.copy()
+          new_df['tweet_agument'] = new_df.apply(lambda row : data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, row['clean_tweet']), axis =1)
+          final_df = pd.concat([final_df, new_df])
 
-        number_of_aug = number_of_aug - minority_df_len
+          number_of_aug = number_of_aug - minority_df_len
 
-      else:
-        
-        new_df = minority_df.iloc[0:number_of_aug].copy()
-        new_df['tweet_agument'] = new_df.apply(lambda row : data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, row['clean_tweet']), axis =1)
-        final_df = pd.concat([final_df, new_df])
+        else:
+          
+          new_df = minority_df.iloc[0:number_of_aug].copy()
+          new_df['tweet_agument'] = new_df.apply(lambda row : data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, row['clean_tweet']), axis =1)
+          final_df = pd.concat([final_df, new_df])
 
-        number_of_aug = 0
+          number_of_aug = 0
 
-    del final_df['clean_tweet']
+      del final_df['clean_tweet']
 
-    final_df.rename(columns={'tweet_agument':'clean_tweet'}, inplace=True)
+      final_df.rename(columns={'tweet_agument':'clean_tweet'}, inplace=True)
+    except:
+        print("Error: please try different format of input")
 
     return final_df
+
+
+def doc_augment(text):
+    doc_aug = data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, text)
+
+    print("Original Text:")
+    print(text)
+    print("Augmented Text:")
+    doc_aug
+
+    return doc_aug
     
     
     
@@ -163,3 +177,15 @@ def get_sentiment_polarity(corpus):
 def get_sentiment_subjectivity(corpus):
     res = np.array([get_sentiment_subjectivity_score(instance) for instance in corpus]).reshape(-1, 1)
     return res
+    
+    
+def Albert_Sentiment(Text):
+
+  analysis = TextBlob(Text)
+  print("#"*100)
+  print("#")
+  print("#Polarity is float which lies in the range of [-1,1] where 1 means positive statement and -1 means a negative statement.\n#Subjective sentences generally refer to personal opinion, emotion or judgment also range of [0,1].")
+  print("#")
+  print("#"*100)
+  print("\nPolarity is {}".format(analysis.sentiment[0]))
+  print("Subjective is {}".format(analysis.sentiment[1]))

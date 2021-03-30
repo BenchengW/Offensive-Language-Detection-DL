@@ -351,9 +351,9 @@ def evaluate_model(probs, y_test):
 
 def plot_confusion_matrix(predict, y_true):
   y_predict = predict.argmax(1)
-  class_hate = pd.DataFrame(confusion_matrix(y_test[:,0], y_predict==0))
-  class_offensive = pd.DataFrame(confusion_matrix(y_test[:,1], y_predict==1))
-  class_neither = pd.DataFrame(confusion_matrix(y_test[:,2], y_predict==2))
+  class_hate = pd.DataFrame(confusion_matrix(y_true[:,0], y_predict==0))
+  class_offensive = pd.DataFrame(confusion_matrix(y_true[:,1], y_predict==1))
+  class_neither = pd.DataFrame(confusion_matrix(y_true[:,2], y_predict==2))
 
   fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15,5))
   sn.set(font_scale=1.5)#for label size
@@ -376,9 +376,9 @@ def plot_confusion_matrix(predict, y_true):
 
 def print_classification_report(predict, y_true):
   y_predict = predict.argmax(1)
-  class_hate = classification_report(y_test[:,0], y_predict==0)
-  class_offensive = classification_report(y_test[:,1], y_predict==1)
-  class_neither = classification_report(y_test[:,2], y_predict==2)
+  class_hate = classification_report(y_true[:,0], y_predict==0)
+  class_offensive = classification_report(y_true[:,1], y_predict==1)
+  class_neither = classification_report(y_true[:,2], y_predict==2)
 
   print("Hate Speech".center(60), "\n", class_hate, "\n\n", 
         "Offensive Speech".center(60), '\n', class_offensive, '\n', 

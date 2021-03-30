@@ -58,11 +58,11 @@ class Albert(object):
         tweet_padded = pad_sequences(tweet_vectors, maxlen=100, padding='post')
         self.prediction_prods = self.Albertmodel.predict(tweet_padded)
         self.prediction = self.prediction_prods.argmax(1)
-        if self.prediction[0] ==1:
+        if self.prediction[0]==1 & len(New_tweet) ==1:
           print("This is classified as Offensive")
-        elif self.prediction[0] ==0:
+        elif self.prediction[0] ==0 & len(New_tweet) ==1:
           print("This is classified as Hate")
-        else:
+        elif self.prediction[0] ==2 & len(New_tweet) ==1:
           print("This is classified as Neither Offensive nor Hate")
 
       elif isinstance(New_tweet, pd.core.series.Series):
@@ -80,6 +80,12 @@ class Albert(object):
         tweet_padded = pad_sequences(tweet_vectors, maxlen=100, padding='post')
         self.prediction_prods = self.Albertmodel.predict(tweet_padded)
         self.prediction = self.prediction_prods.argmax(1)
+        if self.prediction[0]==1:
+          print("This is classified as Offensive")
+        elif self.prediction[0] ==0:
+          print("This is classified as Hate")
+        elif self.prediction[0] ==2:
+          print("This is classified as Neither Offensive nor Hate")
 
       elif isinstance(New_tweet, pd.core.frame.DataFrame):
         kt = Tokenizer()
@@ -92,8 +98,27 @@ class Albert(object):
       else:
         print("Error!\nInput format is not support. Please try other format")
         
-        
+    def check_sentiment(self, New_tweet):
+      
+      if isinstance(New_tweet, list):
+        Albert_Sentiment(New_tweet[0])
 
+      elif isinstance(New_tweet, str):
+        Albert_Sentiment(New_tweet)
+
+      else:
+        print("Error!\nInput format is not support. Please try other format")
+
+    def corpus_augmentation(self, dataframe, class_label, number_of_augmentation):
+      self.corpus_augmentation = docs_augment(dataframe, class_label, number_of_augmentation)
+
+    def doc_augmentation(self, New_tweet):
+      doc_aug = data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, New_tweet)
+      print("Original Text:")
+      print(New_tweet)
+      print("Augmented Text:")
+      print(doc_aug)
+      self.doc_augmentation =doc_aug 
         
         
 class Albert_pretrain(object):
@@ -159,7 +184,29 @@ class Albert_pretrain(object):
 
       else:
         print("Error!\nInput format is not support. Please try other format")
+        
+    def check_sentiment(self, New_tweet):
+      
+      if isinstance(New_tweet, list):
+        Albert_Sentiment(New_tweet[0])
 
+      elif isinstance(New_tweet, str):
+        Albert_Sentiment(New_tweet)
+
+      else:
+        print("Error!\nInput format is not support. Please try other format")
+
+    def corpus_augmentation(self, dataframe, class_label, number_of_augmentation):
+      self.corpus_augmentation = docs_augment(dataframe, class_label, number_of_augmentation)
+
+
+    def doc_augmentation(self, New_tweet):
+      doc_aug = data_augment_bert_sw(aug_insert_bert, aug_substitute_bert, aug_swap, New_tweet)
+      print("Original Text:")
+      print(New_tweet)
+      print("Augmented Text:")
+      print(doc_aug)
+      self.doc_augmentation =doc_aug 
 
 if __name__ == "__main__":
     Pretrain = Albert_pretrain()

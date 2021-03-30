@@ -28,6 +28,7 @@ import seaborn as sn
 import matplotlib.pyplot as plt
 
 import re
+import tensorflow as tf
 
 ###############################################################################################################
 #these are preprocess function
@@ -93,5 +94,14 @@ def preprocessing_tweet(tweet_df):
   return tweet_df
 ###########################################################################################################
 
+def Albert_Sentiment(text):
 
+  analysis = TextBlob(text)
+  print("#"*100)
+  print("#")
+  print("#Polarity is float which lies in the range of [-1,1] where 1 means positive statement and -1 means a negative statement.\n#Subjective sentences generally refer to personal opinion, emotion or judgment also range of [0,1].")
+  print("#")
+  print("#"*100)
+  print("\nPolarity is {}".format(analysis.sentiment[0]))
+  print("Subjective is {}".format(analysis.sentiment[1]))
 

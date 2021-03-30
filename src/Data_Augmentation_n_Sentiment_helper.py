@@ -142,3 +142,27 @@ def data_augment_Hate(df, class_number, number_of_aug):
     final_df.rename(columns={'tweet_agument':'clean_tweet'}, inplace=True)
 
     return final_df
+    
+    
+    
+    
+###############################################################################
+# Sentiment Analysis
+##############################################################################
+
+from textblob import TextBlob
+def get_sentiment_subjectivity_score(text):
+  analysis = TextBlob(text)
+  return analysis.sentiment[1]
+
+def get_sentiment_polarity_score(text):
+  analysis = TextBlob(text)
+  return analysis.sentiment[0]
+
+def get_sentiment_polarity(corpus):
+    res = np.array([get_sentiment_polarity_score(instance) for instance in corpus]).reshape(-1, 1)
+    return res
+
+def get_sentiment_subjectivity(corpus):
+    res = np.array([get_sentiment_subjectivity_score(instance) for instance in corpus]).reshape(-1, 1)
+    return res

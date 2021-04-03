@@ -16,3 +16,6 @@ transformers
 tqdm
 albumentations
 nlpaug
+textblob
+transformers
+nlpaug

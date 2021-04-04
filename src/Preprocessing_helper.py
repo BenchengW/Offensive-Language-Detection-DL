@@ -50,8 +50,7 @@ def hashtag(text):
 
 def allcaps(text):
     text = text.group()
-    return text.lower() + " <allcaps> " # amackcrane added trailing space
-    # function so code less repetitive
+    return text.lower() + " <allcaps> " 
 
 def clean_data(text):
   FLAGS = re.MULTILINE | re.DOTALL
@@ -69,16 +68,10 @@ def clean_data(text):
   text = re_sub(r"/"," / ")
   text = re_sub(r"<3","<heart>")
   text = re_sub(r"[-+]?[.\d]*[\d]+[:,.\d]*", "<number>")
-  text = re_sub(r"#\w+", hashtag)  # amackcrane edit
+  text = re_sub(r"#\w+", hashtag)  
   text = re_sub(r"([!?.]){2,}", r"\1 <repeat>")
   text = re_sub(r"\b(\S*?)(.)\2{2,}\b", r"\1\2 <elong>")
-    
 
-  ## -- I just don't understand why the Ruby script adds <allcaps> to everything so I limited the selection.
-  # text = re_sub(r"([^a-z0-9()<>'`\-]){2,}", allcaps)
-  #text = re_sub(r"([A-Z]){2,}", allcaps)  # moved below -amackcrane
-
-  # amackcrane additions
   text = re_sub(r"([a-zA-Z<>()])([?!.:;,])", r"\1 \2")
   text = re_sub(r"\(([a-zA-Z<>]+)\)", r"( \1 )")
   text = re_sub(r"  ", r" ")

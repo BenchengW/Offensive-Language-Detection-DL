@@ -1,5 +1,5 @@
-# Hate_Speech_Detection_MMAI_894
- This project is going to leverage Deep Learing Technique such as NLP, Embedings, Word2Vec, Doc2Vec, Transfer Learning etc to detect hate speech.
+# Offensive_Language_Detection
+ This project is going to leverage Deep Learing Technique such as NLP, Embedings, Word2Vec, Doc2Vec, Transfer Learning etc to detect hate speech and offensive language.
 
 ### Summary of the Dataset: Hate Speech Data
 Contributors viewed short text and identified if it a) contained hate speech, b) was offensive but without hate speech, or c) was not offensive at all. Contains nearly 15K rows with three contributor judgments per text string.
